@@ -1,5 +1,7 @@
 # SCP - Containment Breach Ultimate Edition Reborn
 
+## Note: This fork is actively being ported to DirectX 8. It relies on a work‑in‑progress version of [BlitzX3D](https://github.com/krimbopple/BlitzX3D) which currently supports DX7 and DX8, with DX9 soon to follow.
+
 This mod is a fork of SCP - Containment Breach, based on the works of the SCP Foundation community (http://www.scp-wiki.net/).
 
 The main goal of the mod is to rekindle interest in SCP - Containment Breach, improve its stability, and diversify gameplay by adding new SCPs, mechanics, and updated visuals.
@@ -10,7 +12,7 @@ http://creativecommons.org/licenses/by-sa/3.0/
 
 Requirements:
 
--	[Blitz3D TSS (ZiYueCommentary)](https://github.com/ZiYueCommentary/Blitz3D/releases) v1.134
+- [BlitzX3D](https://github.com/krimbopple/BlitzX3D) DX8 Branch
 
 -	[IDEal for Blitz3D](https://web.archive.org/web/20130827150202/http://fungamesfactory.com/download.php?get=IDEalSetup_0.8.94.exe) v0.8.94
 

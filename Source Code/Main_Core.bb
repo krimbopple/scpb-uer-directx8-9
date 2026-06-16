@@ -2852,6 +2852,23 @@ Function RefillCup%()
 	EndIf
 End Function
 
+Function SetPlayerModelAnimation%(ID%, InteractionOBJ% = 0)
+; disgusting
+End Function
+
+Function SetPlayerModelColor%(R#, G#, B#)
+	EntityColor(pm\OBJ, R, G, B)
+End Function
+
+Function SetPlayerModelFX%(FX%)
+	EntityFX(pm\OBJ, FX)
+End Function
+
+Function UpdatePlayerModel%()
+    If pm\OBJ <> 0 And (Not EntityHidden(pm\OBJ)) Then HideEntity(pm\OBJ)
+End Function
+
+
 Function SetCrouch%(NewCrouch%)
 	If NewCrouch <> me\Crouch
 		PlaySound_Strict(snd_I\CrouchSFX)

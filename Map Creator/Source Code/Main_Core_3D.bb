@@ -1319,6 +1319,7 @@ Function LoadTerrain%(HeightMap%, yScale# = 0.7, Tex1%, Tex2%, Mask%)
 			AddVertex(Surf, PosX, 0.0, PosY, 1.0 / PosX, 1.0 / PosY)
 		Next
 	Next
+	RenderWorld()
 	
 	Local HeightMapWidth2% = HeightMapWidth + 1
 	

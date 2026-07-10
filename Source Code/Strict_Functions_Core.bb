@@ -382,10 +382,12 @@ Function OpenMovie_Strict%(File$)
 	Local Tmp%
 	
 	If FileType(lang\LanguagePath + File) = 1 Then File = lang\LanguagePath + File
-	If FileType(File) <> 1 Then Return 0
-	Tmp = OpenMovie(File)
-	If Tmp = 0 Then Return 0
-	Return Tmp
+	If Tmp = 0
+		If FileType(File) <> 1 Then RuntimeErrorEx(Format(GetLocalString("runerr", "movie.notfound"), File))
+		Tmp = OpenMovie(File)
+		If Tmp = 0 Then RuntimeErrorEx(Format(GetLocalString("runerr", "movie.failed.load"), File))
+	EndIf
+	Return(Tmp)
 End Function
 
 Function OpenFile_Strict%(File$)

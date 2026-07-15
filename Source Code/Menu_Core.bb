@@ -262,6 +262,10 @@ Function UpdateMainMenu%()
 				
 				If UpdateMenuButton(x, y, Width, Height, TempStr, Font_Default_Big)
 					StopStream_Strict(MusicCHN) : MusicCHN = 0
+					If Steam_Initialized = 0
+						Steam_Shutdown()
+						Steam_Initialized = 1
+					EndIf
 					End()
 				EndIf
 			EndIf

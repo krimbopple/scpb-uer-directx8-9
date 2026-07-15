@@ -19,6 +19,7 @@ If FileSize("d3dx9_43.dll") = 0 Then InitErrorStr = InitErrorStr + "d3dx9_43.dll
 If FileSize("FreeImage.dll") = 0 Then InitErrorStr = InitErrorStr + "FreeImage.dll" + Chr(13) + Chr(10)
 If FileSize("IniController.dll") = 0 Then InitErrorStr = InitErrorStr + "IniController.dll" + Chr(13) + Chr(10)
 If FileSize("RapidBson.dll") = 0 Then InitErrorStr = InitErrorStr + "RapidBson.dll" + Chr(13) + Chr(10)
+If FileSize("BlitzSteamworks.dll") = 0 Then InitErrorStr = InitErrorStr + "BlitzSteamworks.dll" + Chr(13) + Chr(10)
 
 If Len(InitErrorStr) > 0 Then RuntimeError("The following DLLs were not found in the game directory:" + Chr(13) + Chr(10) + Chr(13) + Chr(10) + InitErrorStr + ".")
 

@@ -50,6 +50,13 @@ Global GraphicHeightFloat#
 GraphicWidthFloat = Float(opt\GraphicWidth) : GraphicHeightFloat = Float(opt\GraphicHeight)
 Graphics3DEx(opt\GraphicWidth, opt\GraphicHeight, 0, (opt\DisplayMode = 2) + 1 + ((opt\DisplayMode = 1) * 3))
 
+Global Steam_Initialized% = Steam_Init()
+If Steam_Initialized = 0
+    DebugLog "Steamworks initialized successfully."
+Else
+    DebugLog "Steamworks failed to initialize. Error code: " + Steam_Initialized
+EndIf
+
 AppTitle(Format(GetLocalString("misc", "title"), VersionNumber))
 
 Global MenuScale# = opt\GraphicHeight / 1024.0
@@ -223,7 +230,10 @@ End Function
 Repeat
 	SetErrorMsg(6, "GPU: " + GPUName + " (" + (opt\TotalVidMemory - (AvailVidMem() / 1024)) + "MB/" + opt\TotalVidMemory + " MB)")
 	SetErrorMsg(7, "Global memory status: (" + (opt\TotalPhysMemory - (AvailPhys() / 1024)) + "MB/" + opt\TotalPhysMemory + " MB)")
-	
+	If Steam_Initialized = 0 Then 
+		Steam_Update()
+	EndIf
+
 	Cls()
 	
 	MilliSec = MilliSecs()

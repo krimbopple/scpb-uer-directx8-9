@@ -15,7 +15,7 @@ Type Fonts
 	Field FontID%[MaxFontIDAmount]
 End Type
 
-Const MaxFontIDAmount% = 8
+Const MaxFontIDAmount% = 10
 ; ~ Fonts ID Constants
 ;[Block]
 Const Font_Default% = 0
@@ -26,6 +26,8 @@ Const Font_Journal% = 4
 Const Font_Console% = 5
 Const Font_Credits% = 6
 Const Font_Credits_Big% = 7
+Const Font_Arial% = 8
+Const Font_Arial_Big% = 9
 ;[End Block]
 
 Global fo.Fonts = New Fonts

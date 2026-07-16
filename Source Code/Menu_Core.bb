@@ -58,6 +58,7 @@ Global RandomSeed$
 
 Global SelectedInputBox%, CursorPos% = -1
 Global ShouldDeleteGadgets%
+Global SlideOutAmount# = 20.0 * MenuScale
 
 ; ~ Main Menu Tab Constants
 ;[Block]
@@ -104,6 +105,16 @@ Function UpdateMainMenu%()
 		
 		UpdateMouseInput()
 		
+		For mb.MenuButton = Each MenuButton
+            Local actualX% = mb\BaseX + mb\SlideOffset
+            If MouseOn(actualX, mb\y, mb\Width, mb\Height)
+                mb\TargetOffset = SlideOutAmount
+            Else
+                mb\TargetOffset = 0
+            EndIf
+            mb\SlideOffset = mb\SlideOffset + (mb\TargetOffset - mb\SlideOffset) * 0.1
+        Next
+
 		If ShouldDeleteGadgets Then DeleteMenuGadgets()
 		ShouldDeleteGadgets = False
 		
@@ -144,123 +155,83 @@ Function UpdateMainMenu%()
 		
 		x = 159 * MenuScale
 		If mm\MainMenuTab = MainMenuTab_Default
-			y = 286 * MenuScale
-			Width = 400 * MenuScale
-			Height = 70 * MenuScale
-			
+			Local buttonSpacing% = 100 * MenuScale
+			Local firstY% = opt\GraphicHeight - (4 * buttonSpacing) - (20 * MenuScale)
+			Local bx% = 20 * MenuScale
+			Local by% = firstY
+			Local bWidth% = 400 * MenuScale
+			Local bHeight% = 70 * MenuScale
+
 			If mm\QuitMenu = 0
 				RandomSeed = ""
-				If UpdateMenuButton(x, y, Width, Height, GetLocalString("menu", "new"), Font_Default_Big)
-					;If opt\DebugMode
-					;	RandomSeed = "666"
-					;Else
-						If Rand(15) = 1
-							Select Rand(13)
-								Case 1
-									;[Block]
-									RandomSeed = "NIL"
-									;[End Block]
-								Case 2
-									;[Block]
-									RandomSeed = "NO"
-									;[End Block]
-								Case 3
-									;[Block]
-									RandomSeed = "d9341"
-									;[End Block]
-								Case 4
-									;[Block]
-									RandomSeed = "5CP_I73"
-									;[End Block]
-								Case 5
-									;[Block]
-									RandomSeed = "DONTBLINK"
-									;[End Block]
-								Case 6
-									;[Block]
-									RandomSeed = "CRUNCH"
-									;[End Block]
-								Case 7
-									;[Block]
-									RandomSeed = "die"
-									;[End Block]
-								Case 8
-									;[Block]
-									RandomSeed = "HTAED"
-									;[End Block]
-								Case 9
-									;[Block]
-									RandomSeed = "rustledjim"
-									;[End Block]
-								Case 10
-									;[Block]
-									RandomSeed = "larry"
-									;[End Block]
-								Case 11
-									;[Block]
-									RandomSeed = "JORGE"
-									;[End Block]
-								Case 12
-									;[Block]
-									RandomSeed = "dirtymetal"
-									;[End Block]
-								Case 13
-									;[Block]
-									RandomSeed = "whatpumpkin"
-									;[End Block]
-							End Select
-						Else
-							i = Rand(4, 8)
-							For j = 1 To i
-								If Rand(3) = 1
-									RandomSeed = RandomSeed + Rand(0, 9)
-								Else
-									RandomSeed = RandomSeed + Chr(Rand(97, 122))
-								EndIf
-							Next
-						EndIf
-					;EndIf
+				If UpdateMenuButton(bx, by, bWidth, bHeight, GetLocalString("menu", "new"), Font_Arial_Big)
+					If Rand(15) = 1
+						Select Rand(13)
+							Case 1  : RandomSeed = "NIL"
+							Case 2  : RandomSeed = "NO"
+							Case 3  : RandomSeed = "d9341"
+							Case 4  : RandomSeed = "5CP_I73"
+							Case 5  : RandomSeed = "DONTBLINK"
+							Case 6  : RandomSeed = "CRUNCH"
+							Case 7  : RandomSeed = "die"
+							Case 8  : RandomSeed = "HTAED"
+							Case 9  : RandomSeed = "rustledjim"
+							Case 10 : RandomSeed = "larry"
+							Case 11 : RandomSeed = "JORGE"
+							Case 12 : RandomSeed = "dirtymetal"
+							Case 13 : RandomSeed = "whatpumpkin"
+						End Select
+					Else
+						i = Rand(4, 8)
+						For j = 1 To i
+							If Rand(3) = 1
+								RandomSeed = RandomSeed + Rand(0, 9)
+							Else
+								RandomSeed = RandomSeed + Chr(Rand(97, 122))
+							EndIf
+						Next
+					EndIf
 					LoadSavedGames()
 					CurrSave = New Save
 					LoadCustomMaps()
 					CurrCustomMap = New CustomMaps
 					mm\MainMenuTab = MainMenuTab_New_Game
 				EndIf
-				
-				y = y + (100 * MenuScale)
-				
-				If UpdateMenuButton(x, y, Width, Height, GetLocalString("menu", "load"), Font_Default_Big)
+
+				by = by + buttonSpacing
+
+				If UpdateMenuButton(bx, by, bWidth, bHeight, GetLocalString("menu", "load"), Font_Arial_Big)
 					LoadSavedGames()
 					mm\MainMenuTab = MainMenuTab_Load_Game
 				EndIf
-				
-				y = y + (100 * MenuScale)
-				
-				If UpdateMenuButton(x, y, Width, Height, GetLocalString("menu", "options"), Font_Default_Big) Then mm\MainMenuTab = MainMenuTab_Options
-				
-				y = y + (100 * MenuScale)
-				
-				If UpdateMenuButton(x, y, Width, Height, GetLocalString("menu", "quit"), Font_Default_Big)
+
+				by = by + buttonSpacing
+
+				If UpdateMenuButton(bx, by, bWidth, bHeight, GetLocalString("menu", "options"), Font_Arial_Big)
+					mm\MainMenuTab = MainMenuTab_Options
+				EndIf
+
+				by = by + buttonSpacing
+
+				If UpdateMenuButton(bx, by, bWidth, bHeight, GetLocalString("menu", "quit"), Font_Arial_Big)
 					ShouldDeleteGadgets = True
 					mm\QuitMenu = 1
 					Return
 				EndIf
 			Else
-				y = y + (100 * MenuScale)
-				
-				If UpdateMenuButton(x, y, Width, Height, GetLocalString("menu", "back"), Font_Default_Big)
+				by = firstY + buttonSpacing
+				If UpdateMenuButton(bx, by, bWidth, bHeight, GetLocalString("menu", "back"), Font_Arial_Big)
 					ShouldDeleteGadgets = True
 					mm\QuitMenu = 0
 					Return
 				EndIf
-				
-				y = y + (100 * MenuScale)
-				
+
+				by = by + buttonSpacing
+
 				Local TempStr$ = GetLocalString("menu", "quit")
-				
 				If mm\MainMenuBlinkTimer[1] < mm\MainMenuBlinkDuration[1] Then TempStr = GetLocalString("menu", "escape")
-				
-				If UpdateMenuButton(x, y, Width, Height, TempStr, Font_Default_Big)
+
+				If UpdateMenuButton(bx, by, bWidth, bHeight, TempStr, Font_Arial_Big)
 					StopStream_Strict(MusicCHN) : MusicCHN = 0
 					End()
 				EndIf
@@ -976,8 +947,8 @@ Function RenderMainMenu%()
 	
 	ShowPointer()
 	
-	DrawBlock(mma\BackGround, 0, 0)
-	If mm\Show173 Then DrawBlock(mma\SCP173, opt\GraphicWidth - ImageWidth(mma\SCP173), opt\GraphicHeight - ImageHeight(mma\SCP173))
+	;DrawBlock(mma\BackGround, 0, 0)
+	;If mm\Show173 Then DrawBlock(mma\SCP173, opt\GraphicWidth - ImageWidth(mma\SCP173), opt\GraphicHeight - ImageHeight(mma\SCP173))
 	SetFontEx(fo\FontID[Font_Default])
 	If mm\MainMenuBlinkTimer[1] < mm\MainMenuBlinkDuration[1]
 		Color(50, 50, 50)
@@ -2022,75 +1993,87 @@ Type MenuButton
 	Field FontID%
 	Field Locked%
 	Field R%, G%, B%
+	Field BaseX%
+	Field SlideOffset#
+	Field TargetOffset#
 End Type
 
 Function UpdateMenuButton%(x%, y%, Width%, Height%, Txt$, FontID% = Font_Default, WaitForMouseUp% = False, Locked% = False, R% = 255, G% = 255, B% = 255)
-	Local mb.MenuButton, CurrButton.MenuButton
-	Local Clicked% = False
-	Local ButtonExists% = False
-	
-	For mb.MenuButton = Each MenuButton
-		If mb\x = x And mb\y = y And mb\Width = Width And mb\Height = Height
-			ButtonExists = True
-			Exit
-		EndIf
-	Next
-	If (Not ButtonExists)
-		mb.MenuButton = New MenuButton
-		mb\x = x
-		mb\y = y
-		mb\Width = Width
-		mb\Height = Height
-		mb\Txt = Txt
-		mb\FontID = FontID
-		mb\Locked = Locked
-		mb\R = R
-		mb\B = B
-		mb\G = G
-	Else
-		CurrButton = mb
-		CurrButton\Txt = Txt
-		CurrButton\FontID = FontID
-		CurrButton\Locked = Locked
-	EndIf
-	
-	If MouseOn(x, y, Width, Height)
-		If (mo\MouseHit1 And (Not WaitForMouseUp)) Lor (mo\MouseUp1 And WaitForMouseUp)
-			If Locked
-				PlaySound_Strict(ButtonSFX[1])
-			Else
-				Clicked = True
-				PlaySound_Strict(ButtonSFX[0])
-			EndIf
-		EndIf
-	EndIf
-	Return(Clicked)
+    Local mb.MenuButton, CurrButton.MenuButton
+    Local Clicked% = False
+    Local ButtonExists% = False
+    
+    For mb.MenuButton = Each MenuButton
+        If mb\BaseX = x And mb\y = y And mb\Width = Width And mb\Height = Height
+            ButtonExists = True
+            Exit
+        EndIf
+    Next
+    If (Not ButtonExists)
+        mb.MenuButton = New MenuButton
+        mb\BaseX = x
+        mb\x = x
+        mb\y = y
+        mb\Width = Width
+        mb\Height = Height
+        mb\Txt = Txt
+        mb\FontID = FontID
+        mb\Locked = Locked
+        mb\R = R
+        mb\B = B
+        mb\G = G
+        mb\SlideOffset = 0
+        mb\TargetOffset = 0
+    Else
+        CurrButton = mb
+        CurrButton\Txt = Txt
+        CurrButton\FontID = FontID
+        CurrButton\Locked = Locked
+        CurrButton\R = R
+        CurrButton\G = G
+        CurrButton\B = B
+    EndIf
+    
+    Local actualX% = mb\BaseX + mb\SlideOffset
+    If MouseOn(actualX, mb\y, mb\Width, mb\Height)
+        If (mo\MouseHit1 And (Not WaitForMouseUp)) Lor (mo\MouseUp1 And WaitForMouseUp)
+            If Locked
+                PlaySound_Strict(ButtonSFX[1])
+            Else
+                Clicked = True
+                PlaySound_Strict(ButtonSFX[0])
+            EndIf
+        EndIf
+    EndIf
+    Return(Clicked)
 End Function
 
 Function RenderMenuButtons%()
-	Local mb.MenuButton
-	
-	For mb.MenuButton = Each MenuButton
-		RenderFrame(mb\x, mb\y, mb\Width, mb\Height, (mb\x Mod 256), (mb\y Mod 256), mb\Locked)
-		If MouseOn(mb\x, mb\y, mb\Width, mb\Height)
-			Color(30, 30, 30)
-			Rect(mb\x + (3 * MenuScale), mb\y + (3 * MenuScale), mb\Width - (6 * MenuScale), mb\Height - (6 * MenuScale))
-		Else
-			Color(0, 0, 0)
-		EndIf
-		
-		If mb\Locked
-			If mb\R <> 255 Lor mb\G <> 255 Lor mb\B <> 255
-				Color(mb\R, mb\G, mb\B)
-			Else
-				Color(100, 100, 100)
-			EndIf
-		Else
-			Color(mb\R, mb\G, mb\B)
-		EndIf
-		SetFontEx(fo\FontID[mb\FontID])
-		TextEx(mb\x + (mb\Width / 2), mb\y + (mb\Height / 2), mb\Txt, True, True)
-	Next
+    Local mb.MenuButton
+    
+    For mb.MenuButton = Each MenuButton
+        Local actualX% = mb\BaseX + mb\SlideOffset
+        Local isHover% = MouseOn(actualX, mb\y, mb\Width, mb\Height)
+        
+        If isHover
+            Color(60, 60, 60)
+        Else
+            Color(40, 40, 40)
+        EndIf
+        Rect(actualX, mb\y, mb\Width, mb\Height, True)
+        
+        If mb\Locked
+            If mb\R <> 255 Lor mb\G <> 255 Lor mb\B <> 255
+                Color(mb\R, mb\G, mb\B)
+            Else
+                Color(100, 100, 100)
+            EndIf
+        Else
+            Color(mb\R, mb\G, mb\B)
+        EndIf
+        SetFontEx(fo\FontID[mb\FontID])
+        TextEx(actualX + (mb\Width / 2), mb\y + (mb\Height / 2), mb\Txt, True, True)
+    Next
 End Function
 
 Function DeleteMenuButton%(mb.MenuButton)

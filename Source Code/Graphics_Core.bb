@@ -442,6 +442,14 @@ Function SetFontEx%(Font%)
 			;[Block]
 			FontName = "Credits_Big"
 			;[End Block]
+		Case fo\FontID[Font_Arial]
+			;[Block]
+            FontName = "Arial"
+			;[End Block]
+		Case fo\FontID[Font_Arial_Big]
+			;[Block]
+    		FontName = "Arial_Big"
+			;[End Block]
 	End Select
 	TextOffset = Int(GetFileLocalString(FontsFile, FontName, "Offset"))
 	SetFont(Font)

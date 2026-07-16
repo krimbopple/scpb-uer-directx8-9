@@ -131,6 +131,8 @@ Function LoadFonts%()
 	fo\FontID[Font_Digital_Big] = LoadFont_Strict(FontsPath + GetFileLocalString(FontsFile, "Digital_Big", "File"), GetFileLocalString(FontsFile, "Digital_Big", "Size"))
 	fo\FontID[Font_Journal] = LoadFont_Strict(FontsPath + GetFileLocalString(FontsFile, "Journal", "File"), GetFileLocalString(FontsFile, "Journal", "Size"))
 	fo\FontID[Font_Console] = LoadFont_Strict(FontsPath + GetFileLocalString(FontsFile, "Console", "File"), GetFileLocalString(FontsFile, "Console", "Size"))
+	fo\FontID[Font_Arial] = LoadFont_Strict(FontsPath + GetFileLocalString(FontsFile, "Arial", "File"), GetFileLocalString(FontsFile, "Arial", "Size"))
+	fo\FontID[Font_Arial_Big] = LoadFont_Strict(FontsPath + GetFileLocalString(FontsFile, "Arial_Big", "File"), GetFileLocalString(FontsFile, "Arial_Big", "Size"))
 End Function
 
 LoadFonts()

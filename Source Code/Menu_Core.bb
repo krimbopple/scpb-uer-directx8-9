@@ -18,6 +18,8 @@ Type MainMenuAssets
 	Field BackGround%
 	Field SECURE_CONTAIN_PROTECT%
 	Field SCP173%
+	Field BGCam%
+	Field BGPlane%
 End Type
 
 Global mma.MainMenuAssets
@@ -35,8 +37,18 @@ Function InitMainMenuAssets%()
 	mma\BackGround = ResizeImageEx(LoadImage_Strict("GFX\Menu\back.png"), MenuScale, MenuScale)
 	
 	mma\SECURE_CONTAIN_PROTECT = ResizeImageEx(LoadImage_Strict("GFX\Menu\SCP_text.png"), MenuScale, MenuScale)
+
+	mma\BGCam = CreateCamera()
+	CameraClsColor(mma\BGCam, 10, 10, 10)
+	CameraRange(mma\BGCam, 1.0, 8000.0)
 	
-	mma\SCP173 = ResizeImageEx(LoadImage_Strict("GFX\Menu\scp_173_back.png"), MenuScale, MenuScale)
+	mma\BGPlane = CreatePlane(20)
+	ScaleEntity(mma\BGPlane, 40.0, 1.0, 40.0)
+	EntityColor(mma\BGPlane, 35, 35, 35)
+	EntityFX(mma\BGPlane, 1)
+	
+	PositionEntity(mma\BGCam, 0, 300, -600)
+	PointEntity(mma\BGCam, mma\BGPlane)
 	
 	mm\MainMenuBlinkTimer[0] = 1.0
 	mm\MainMenuBlinkTimer[1] = 1.0
@@ -49,7 +61,8 @@ End Function
 Function DeInitMainMenuAssets%()
 	FreeImage(mma\BackGround) : mma\BackGround = 0
 	FreeImage(mma\SECURE_CONTAIN_PROTECT) : mma\SECURE_CONTAIN_PROTECT = 0
-	FreeImage(mma\SCP173) : mma\SCP173 = 0
+	FreeEntity(mma\BGPlane) : mma\BGPlane = 0
+	FreeEntity(mma\BGCam) : mma\BGCam = 0
 	Delete(mma) : mma = Null
 	Delete(mm) : mm = Null
 End Function
@@ -491,12 +504,23 @@ Function UpdateMainMenu%()
 						;[End Block]
 					Case MainMenuTab_Options
 						;[Block]
-						Height = 60 * MenuScale
+						Local optButtonSpacing% = 100 * MenuScale
+						Local optFirstY% = opt\GraphicHeight - (4 * optButtonSpacing) - (20 * MenuScale)
+						Local obx% = 20 * MenuScale
+						Local oby% = optFirstY
+						Local obWidth% = 400 * MenuScale
+						Local obHeight% = 70 * MenuScale
 						
-						If UpdateMenuButton(x + (20 * MenuScale), y + (15 * MenuScale), (Width / 5) + (420 * MenuScale), Height, GetLocalString("options", "grap"), Font_Default_Big) Then ChangeOptionTab(MainMenuTab_Options_Graphics)
-						If UpdateMenuButton(x + (20 * MenuScale), y + (85  * MenuScale), (Width / 5) + (420 * MenuScale), Height, GetLocalString("options", "audio"), Font_Default_Big) Then ChangeOptionTab(MainMenuTab_Options_Audio)
-						If UpdateMenuButton(x + (20 * MenuScale), y + (155 * MenuScale), (Width / 5) + (420 * MenuScale), Height, GetLocalString("options", "ctrl"), Font_Default_Big) Then ChangeOptionTab(MainMenuTab_Options_Controls)
-						If UpdateMenuButton(x + (20 * MenuScale), y + (225 * MenuScale), (Width / 5) + (420 * MenuScale), Height, GetLocalString("options", "avc"), Font_Default_Big) Then ChangeOptionTab(MainMenuTab_Options_Advanced)
+						If UpdateMenuButton(obx, oby, obWidth, obHeight, GetLocalString("options", "grap"), Font_Arial_Big) Then ChangeOptionTab(MainMenuTab_Options_Graphics)
+						oby = oby + optButtonSpacing
+						
+						If UpdateMenuButton(obx, oby, obWidth, obHeight, GetLocalString("options", "audio"), Font_Arial_Big) Then ChangeOptionTab(MainMenuTab_Options_Audio)
+						oby = oby + optButtonSpacing
+						
+						If UpdateMenuButton(obx, oby, obWidth, obHeight, GetLocalString("options", "ctrl"), Font_Arial_Big) Then ChangeOptionTab(MainMenuTab_Options_Controls)
+						oby = oby + optButtonSpacing
+						
+						If UpdateMenuButton(obx, oby, obWidth, obHeight, GetLocalString("options", "avc"), Font_Arial_Big) Then ChangeOptionTab(MainMenuTab_Options_Advanced)
 						;[End Block]
 				End Select
 			Else
@@ -947,8 +971,7 @@ Function RenderMainMenu%()
 	
 	ShowPointer()
 	
-	;DrawBlock(mma\BackGround, 0, 0)
-	;If mm\Show173 Then DrawBlock(mma\SCP173, opt\GraphicWidth - ImageWidth(mma\SCP173), opt\GraphicHeight - ImageHeight(mma\SCP173))
+	RenderWorld()
 	SetFontEx(fo\FontID[Font_Default])
 	If mm\MainMenuBlinkTimer[1] < mm\MainMenuBlinkDuration[1]
 		Color(50, 50, 50)
@@ -1024,8 +1047,6 @@ Function RenderMainMenu%()
 		EndIf
 	EndIf
 	SetFontEx(fo\FontID[Font_Default_Big])
-	DrawBlock(mma\SECURE_CONTAIN_PROTECT, mo\Viewport_Center_X - ImageWidth(mma\SECURE_CONTAIN_PROTECT) / 2, opt\GraphicHeight - (20 * MenuScale) - ImageHeight(mma\SECURE_CONTAIN_PROTECT))
-	If opt\GraphicWidth > 1240 Then RenderTiledImageRect(MenuWhite, 0, 5 * MenuScale, 512.0 * MenuScale, 5.0 * MenuScale, 985 * MenuScale, 407 * MenuScale, (opt\GraphicWidth - (940 * MenuScale)), 5 * MenuScale)
 	If mm\MainMenuTab <> MainMenuTab_Default
 		x = 159 * MenuScale
 		y = 286 * MenuScale
